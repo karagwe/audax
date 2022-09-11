@@ -1,6 +1,6 @@
 export const topSongs = [
     {
-        name: "i love you",
+        name: "i like you",
         creator : "abdul kabugu",
         song : "audio/music-1.mp3",
         cover: "img/abdul.jpg"
@@ -8,53 +8,53 @@ export const topSongs = [
     {
         name: "i love you",
         creator : "abdul kabugu",
-        song : "audio/music-1.mp3",
+        song : "audio/music-2.mp3",
         cover: "img/abdul.jpg"
     },
     {
-        name: "i love you",
+        name: "i fell you",
+        creator : "abdul kabugu",
+        song : "audio/music-3.m4a",
+        cover: "img/abdul.jpg"
+    },
+    {
+        name: "i fall you",
         creator : "abdul kabugu",
         song : "audio/music-1.mp3",
         cover: "img/abdul.jpg"
     },
     {
-        name: "i love you",
+        name: "i hate you",
         creator : "abdul kabugu",
         song : "audio/music-1.mp3",
         cover: "img/abdul.jpg"
     },
     {
-        name: "i love you",
+        name: "i do for  you",
         creator : "abdul kabugu",
         song : "audio/music-1.mp3",
         cover: "img/abdul.jpg"
     },
     {
-        name: "i love you",
+        name: "i smail for  you",
         creator : "abdul kabugu",
         song : "audio/music-1.mp3",
         cover: "img/abdul.jpg"
     },
     {
-        name: "i love you",
+        name: "i dance for you",
         creator : "abdul kabugu",
         song : "audio/music-1.mp3",
         cover: "img/abdul.jpg"
     },
     {
-        name: "i love you",
+        name: "i sleep for you",
         creator : "abdul kabugu",
         song : "audio/music-1.mp3",
         cover: "img/abdul.jpg"
     },
     {
-        name: "i love you",
-        creator : "abdul kabugu",
-        song : "audio/music-1.mp3",
-        cover: "img/abdul.jpg"
-    },
-    {
-        name: "i love you",
+        name: "i cry for  you",
         creator : "abdul kabugu",
         song : "audio/music-1.mp3",
         cover: "img/abdul.jpg"

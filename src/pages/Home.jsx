@@ -9,7 +9,7 @@ export default function Home() {
     <Box>
         
         <Box display='flex'>
-          <Box w="25%" bgColor="blackAlpha.900" h="100vh" borderRight="1px" borderColor="cyan">
+          <Box w="23%" bgColor="blackAlpha.900" h="100vh" borderRight="1px" borderColor="cyan">
             <SideBar />
           </Box>
           <Box p={3} w="75%">
