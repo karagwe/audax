@@ -119,7 +119,7 @@ export default function CreatePostStepOne({postDescription,
        } else {
         return(
           <Box w="100%" h={150} border="1px" borderColor="gray.400" borderRadius={8}  display="flex" flexDirection="column" alignItems="center" justifyContent="center">
-           <input type="file" ref={slectPhotoRef}  onChange={e => setselctedPhoto(e.target.files[0])} multiple ={false} hidden accept="image/png"/>
+           <input type="file" ref={slectPhotoRef}  onChange={e => setselctedPhoto(e.target.files[0])} multiple ={false} hidden accept="image/jpeg"/>
           <Text>{selctedPhoto.name}</Text>
          <Button onClick={ selectePhoto}  variant="outline">Select File</Button>
          <Button onClick={() =>  handleUploadAudCover(selctedPhoto)} color="blackAlpha.900" mt={6} w={170} leftIcon={<AiOutlineCloudUpload />} >Upload file</Button>

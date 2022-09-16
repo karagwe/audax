@@ -24,10 +24,11 @@ export default function Home() {
    console.log("user publication", songs)
   // console.log("the user profile", userProfile)
   return (
-    <Box>
+    <Box  h="100vh" w="100vw">
         <Navbar  />
+      
         <Box display='flex'>
-          <Box w="20%" bgColor="blackAlpha.900" h="86vh" borderRight="1px" borderColor="cyan"
+          <Box w="20%" bgColor="blackAlpha.900" h="76vh" borderRight="1px" borderColor="cyan"
            overflowY="scroll" sx={{
             '&::-webkit-scrollbar': {
               display: "none",
@@ -37,14 +38,22 @@ export default function Home() {
           >
             <SideBar />
           </Box>
-          <Box p={3} w="77%">
+          <Box p={3} w="80%" overflowY="scroll" h="76vh"
+          sx={{
+            '&::-webkit-scrollbar': {
+              display: "none",
+              '-ms-overflow-style' : "none"
+            },
+       }}
+          >
             <MainView songs = {songs} isloadig = {isSongsLoading} isError = {isSongsError} />
           </Box>
 
         </Box>
-        <Box w="100%" h={100} bgColor="red.700" position="fixed" top="85vh">
+        <Box w="100%" h={80}  position="fixed" top="85vh" >
           <AudioPlayer  />
           </Box>
+          
     </Box>
   )
 }

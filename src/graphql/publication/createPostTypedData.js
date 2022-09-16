@@ -63,17 +63,17 @@ const  useCreatePost = () => {
          }
         
     const metadata = {
-         // version: '2.0.0',
-           version : '1.0.0',
+          version: '2.0.0',
+          // version : '1.0.0',
           metadata_id: uuidv4(),
           description: description,
           content: albumName,
-          //locale : "en-US",
-         // tags : tags,
-          // mainContentFocus :  'AUDIO',
+          locale : "en-US",
+         tags : tags,
+           mainContentFocus :  'AUDIO',
            external_url: null,
           image: trackCover,
-          imageMimeType: "image/png",
+          imageMimeType: "image/jpeg",
           name: albumName,
           attributes: [],
           media: [
@@ -86,7 +86,7 @@ const  useCreatePost = () => {
           ],
          
           //animation_url : "",
-          appId: 'audafo',
+          appId: 'audius',
         }
 
         

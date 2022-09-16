@@ -1,1 +1,4 @@
-
+.my-image {
+   filter: brightness(0.6);
+   border-radius: 8px;
+}

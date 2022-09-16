@@ -6,7 +6,7 @@ export const EXPLORE_SONGS = gql`
     sortCriteria: TOP_COMMENTED,
     publicationTypes: [POST, MIRROR],
     
-    sources :  ["audafo"]       
+    sources :  ["audius"]       
     
     
   }) {
@@ -36,6 +36,7 @@ export const EXPLORE_SONGS = gql`
     height
     mimeType
     altTag
+    cover
     
   }
   fragment ProfileFields on Profile {

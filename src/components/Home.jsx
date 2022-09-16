@@ -1,4 +1,7 @@
-import { Avatar, AvatarBadge, Box, Button, Circle, CloseButton, Heading, HStack, IconButton, Image , Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text} from '@chakra-ui/react'
+import { Avatar, AvatarBadge, Box, Button, Circle, CloseButton, Heading, HStack, IconButton, Image , Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text,
+  Fade, ScaleFade, Slide, SlideFade 
+
+} from '@chakra-ui/react'
 import React, {useRef, useState, useEffect} from 'react'
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
 import { FaPause, FaPlay } from 'react-icons/fa'
@@ -15,9 +18,11 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import AudioPlayer from './AudioPlayer'
 import { topBanner } from '../topBanner'
+import { BiBrightness } from 'react-icons/bi'
 
-export default function Home() {
+export default function Home({songs, isLoading, isError}) {
     const [slideRef, setSlideRef] = useState(null)
+    const [slideRefTwo, setSlideRefTwo] = useState(null)
     const [isAuthModal, setisAuthModal] = useState(false)
      const [isLensSignedIn, setisLensSignedIn] = useState(false)
      const [test, settest] = useState(true)
@@ -25,7 +30,9 @@ export default function Home() {
     const {isPlaying, audioRef, currentPlayingSong} = usestate(store)
     const [isShowBannerControls, setisShowBannerControls] = useState(false)
      const [isShowPlayBtn, setisShowPlayBtn] = useState(false)
+     const [hoveredCard, sethoveredCard] = useState()
     const {authenticate, account, logout, isAuthenticated, isAuthenticating, authError}  = useMoralis()
+
 
     useEffect(() => {
       myAudRef.current = myAudRef.current.slice(0, topSongs.length)
@@ -43,7 +50,8 @@ export default function Home() {
       };
 
       const bannerSettings  = {
-        dots: true,
+        dots: false,
+       // centerMode: true,
       infinite: true,
       speed: 1000,
       slidesToShow: 1,
@@ -52,6 +60,7 @@ export default function Home() {
       autoplay: true,
       cssEase: "linear",
       autoplaySpeed: 4000,
+      className: "slider-container"
       }
       
       const myAudRef = useRef([])
@@ -64,16 +73,13 @@ export default function Home() {
             globalState.currentSongState.set({...globalState.currentSongState?.get(), "progress" : ct / duration * 100, "length" : duration})
       } 
 
-      //const LENS_ACCESS_TOKEN = sessionStorage.getItem('accessToken')
-      //const slicedAccount = `${account?.slice(0,4)}... ${account?.slice(39)}`
+     
       const myAudioRef = useRef()
       const clickRef = useRef()
      // const {signIn} = useSignIn()
      const playChoosenAud = (aud, index, song) => {
       
-     // myAudRef.current[globalState.currentIndexSong.get()].pause()
-      //globalState.audioRef.get()?.pause()
-      // globalState.audioRef.get().currentTime = 0
+     
       if(globalState.audioRef.get() !== '') {
         globalState.audioRef.get()?.pause()
         globalState.audioRef.get().currentTime = 0
@@ -98,15 +104,25 @@ export default function Home() {
 
          const closeAuthModal = () => {
               setisAuthModal(false)
+         } 
+
+         const  handleMouseEnterCard = (index) => {
+          sethoveredCard(index)
+            setisShowPlayBtn(true)
          }
 
-   
+         console.log("this is hovered  card", hoveredCard)
+
+         const  handleMouseLeaveCard = () => {
+          
+           setisShowPlayBtn(false)
+         }
          
-  return (
+         return (
     <Box >
        
-        <Box bgColor="cyan.500" w="100%" h={300} onMouseEnter = {() => setisShowBannerControls(true)} onMouseLeave = {() => setisShowBannerControls(false)}>
-           <Slider ref={setSlideRef} {...bannerSettings}>
+        <Box bgColor="blackAlpha.800" w="100%" h={300} onMouseEnter = {() => setisShowBannerControls(true)} onMouseLeave = {() => setisShowBannerControls(false)}>
+           <Slider ref={setSlideRef} {...bannerSettings} >
               {topBanner.map((data, i) => {
 
                 return(
@@ -114,9 +130,9 @@ export default function Home() {
                  position: "relative", 
                   }}>
                   
-                    <Image  src={data.image}   w="100%" h="100%" objectFit="cover"   maxH={300} />
+                    <Image  src={data.image}   w="100%" h={300} objectFit="cover"   maxH={300} />
                     {isShowBannerControls && <Box  w="100%" display="flex" justifyContent="space-between" sx={{
-                      position: "absolute", top : "50%"
+                      position: "absolute", top : "45%"
                      }}>
                     
                     <IconButton  icon={ <AiOutlineLeft   size={30} color="white" onClick={slideRef?.slickPrev}/> }  bgColor="blackAlpha.600"/>
@@ -128,33 +144,46 @@ export default function Home() {
            </Slider>
         </Box>
        
-        <Box h="200" w="99%"  mx="auto" mt={3}>
-            <Slider  {...settings}>
-            {topSongs.map((song, i) => {
+        <Box  py={4}  >
+           <Box w="95%" mx="auto" display="flex" justifyContent="space-between"  p={2} alignItems="center">
+              <Heading fontSize="3xl" >Ngoma za moto</Heading>
+               <Box display="flex" alignItems="center" w={100} justifyContent="space-between">
+                <AiOutlineLeft  size={30} cursor="pointer" onClick={slideRefTwo?.slickPrev}/>
+                <AiOutlineRight size={30} cursor="pointer" onClick={slideRefTwo?.slickNext}/>
+               </Box>
+           </Box>
+           <Slider ref={setSlideRefTwo} {...settings}>
+          {songs?.explorePublications?.items.map((data, i) => {
 
-                return(
-                    <HStack key={i} position="relative">
-                       <Box w={170} h={170} bgColor="blackAlpha.400"  onMouseEnter={() => setisShowPlayBtn(true) } onMouseLeave = {() => setisShowPlayBtn(false)}>
-                    <Image   src={song.cover}  style={{width: "180px", height: "170px", objectFit: "cover", borderRadius: "4px", cursor: "pointer"}} />
-                  </Box>
-                  <Box textAlign="center" >
-                    <Text>{song?.creator}</Text>
-                    <Text>{song?.name}</Text>
-                     <audio    src={song.song} ref={el =>  myAudRef.current[i] = el}  onTimeUpdate={() => onPlaying(i)}    />
-                     
-
+            return(
+              <Box  >
+                <Box bgColor="blackAlpha.100" mx={3} w={196} h={196} p={1} position="relative" borderRadius={8} onMouseEnter = {() =>  handleMouseEnterCard(i)} onMouseLeave = {() => setisShowPlayBtn(false)}>
+                  <img   src={data.metadata.image} maxW="100%" borderTopRadius={8} borderBottomRadius={4}  className="my-image"/>
+                   {isShowPlayBtn && i === hoveredCard &&
+                   <ScaleFade initialScale={0.1} in={isShowPlayBtn}>
+                  <Box position="absolute" top={0} w={196} h={196} bgColor="blackAlpha.600" display="flex" alignItems="center" justifyContent="center" >
+                   <Circle size={67} bgColor="blackAlpha.400" cursor="pointer" >
+                   <FaPlay  size={30}/>
+                   </Circle>
+                </Box>
+                </ScaleFade> 
+                   }
+                    
+                    <Box boxShadow="dark-lg">
+                      <Text textAlign="center" textTransform="capitalize" fontSize="lg" color="whiteAlpha.600" cursor="pointer">{data.metadata.name}</Text>
+                       <Text textAlign="center" color="whiteAlpha.800" cursor="pointer"> {data.profile.name || data.profile.handle} </Text>
                     </Box>
-                    {isShowPlayBtn &&  <Box width={170} h={170} position="absolute" top={0} bgColor="blackAlpha.600" zIndex={0}  display="flex" alignItems="center" justifyContent="center">{isPlaying.get()  && globalState.currentIndexSong.get() === i? <IconButton   icon={<FaPause  size={30} onClick = {() => pauseIt()}/>}  colorScheme="blackAlpha" />  : <IconButton    icon={<FaPlay  size={30} onClick= {() => playChoosenAud(myAudRef, i, song)}/>}   colorScheme="blackAlpha"/>} </Box>}
-                    </HStack> 
-                )
-            })}
-     </Slider>
-    {/*} <audio src={topSongs[0].song}    ref={audioRef}   onTimeUpdate={onPlaying}/>
-          <AudioPlayer song= {currentSong} setSong = {setcurrentSong} isPlaying={isPlaying} setisPlaying= {setisPlaying}
-            audioRef ={audioRef}
-          />*/}
-          
+                  </Box>
+                   
+                 </Box>
+            )
+          })}
+          </Slider>
         </Box>
+       
+  
+          
+      
     </Box>
   )
 }
@@ -217,4 +246,10 @@ export default function Home() {
            <Box mt={10}>
             <AudioPlayer  />
            </Box>
+
+
+             } <audio src={topSongs[0].song}    ref={audioRef}   onTimeUpdate={onPlaying}/>
+          <AudioPlayer song= {currentSong} setSong = {setcurrentSong} isPlaying={isPlaying} setisPlaying= {setisPlaying}
+            audioRef ={audioRef}
+          />
 */}

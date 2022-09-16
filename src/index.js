@@ -5,6 +5,7 @@ import App from './App';
 import {MoralisProvider} from 'react-moralis'
 import {ApolloProvider} from '@apollo/client'
 import {apolloClient} from './graphql/Authentication/apoloClient'
+import "./index.css"
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

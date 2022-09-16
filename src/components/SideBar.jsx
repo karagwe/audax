@@ -45,6 +45,7 @@ export default function SideBar() {
   const [gateChain, setgateChain] = useState("")
   const [postPermission, setpostPermission] = useState(false)
   const [collectLimit, setcollectLimit] = useState("")
+  const [postMedia, setpostMedia] = useState([])
   const [page, setpage] = useState(0)
 
    const {account} = useMoralis()
@@ -81,7 +82,7 @@ export default function SideBar() {
 
   
 
-   console.log("selected post module", selectedPostModule)
+   console.log("selected post module", postMedia)
    console.log("the post audio uri", selectedFilesURI)
   
 const toggleIsCollectFeePage = () => {
