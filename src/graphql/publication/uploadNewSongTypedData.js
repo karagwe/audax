@@ -78,7 +78,7 @@ const  useCreatePost = () => {
           attributes: [],
           media: [
              {
-            item:mediaURI,
+            item:mediaURI,    
              type: 'audio/mpeg',
              altTag: trackName,
              cover : trackCover
@@ -86,7 +86,7 @@ const  useCreatePost = () => {
           ],
          
           //animation_url : "",
-          appId: 'audius',
+          appId: 'audios',
         }
 
         

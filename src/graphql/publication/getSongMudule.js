@@ -1,17 +1,8 @@
 import {gql} from '@apollo/client'
- //["pax423"]
-export const EXPLORE_SONGS = gql`
-  query{
-  explorePublications(request: {
-    sortCriteria: TOP_COMMENTED,
-    publicationTypes: [POST, MIRROR],
-    
-    sources :  ["audios"]       
-    
-    
-  }) {
-    
-      items {
+
+ export const GET_TRACK_MODULE = gql`
+  query($request: PublicationQueryRequest!) {
+    publication(request: $request) {
         __typename 
         ... on Post {
           ...PostFields
@@ -21,24 +12,15 @@ export const EXPLORE_SONGS = gql`
         }
         ... on Mirror {
           ...MirrorFields
-        }
-      }
-      pageInfo {
-        prev
-        next
-        totalCount
       }
     }
   }
+
   fragment MediaFields on Media {
     url
-    width
-    height
     mimeType
-    altTag
-    cover
-    
   }
+
   fragment ProfileFields on Profile {
     id
     name
@@ -49,7 +31,7 @@ export const EXPLORE_SONGS = gql`
       key
       value
     }
-    isFollowedByMe
+        isFollowedByMe
     isFollowing(who: null)
     followNftAddress
     metadata
@@ -66,12 +48,6 @@ export const EXPLORE_SONGS = gql`
         original {
           ...MediaFields
         }
-        small {
-          ...MediaFields
-        }
-        medium {
-          ...MediaFields
-        }
       }
     }
     coverPicture {
@@ -83,12 +59,6 @@ export const EXPLORE_SONGS = gql`
       }
       ... on MediaSet {
         original {
-          ...MediaFields
-        }
-        small {
-         ...MediaFields
-        }
-        medium {
           ...MediaFields
         }
       }
@@ -121,34 +91,28 @@ export const EXPLORE_SONGS = gql`
         recipient
       }
       ... on ProfileFollowModuleSettings {
-        type
+       type
       }
       ... on RevertFollowModuleSettings {
-        type
+       type
       }
     }
   }
+
   fragment PublicationStatsFields on PublicationStats { 
     totalAmountOfMirrors
     totalAmountOfCollects
     totalAmountOfComments
   }
+
   fragment MetadataOutputFields on MetadataOutput {
     name
     description
     content
-    image
     media {
       original {
         ...MediaFields
       }
-      small {
-        ...MediaFields
-      }
-      medium {
-        ...MediaFields
-      }
-      
     }
     attributes {
       displayType
@@ -156,18 +120,20 @@ export const EXPLORE_SONGS = gql`
       value
     }
   }
+
   fragment Erc20Fields on Erc20 {
     name
     symbol
     decimals
     address
   }
+
   fragment CollectModuleFields on CollectModule {
     __typename
     ... on FreeCollectModuleSettings {
-      type
-      followerOnly
-      contractAddress
+        type
+        followerOnly
+        contractAddress
     }
     ... on FeeCollectModuleSettings {
       type
@@ -221,6 +187,7 @@ export const EXPLORE_SONGS = gql`
       endTimestamp
     }
   }
+
   fragment PostFields on Post {
     id
     profile {
@@ -242,11 +209,12 @@ export const EXPLORE_SONGS = gql`
       }
     }
     appId
-    hidden
-    reaction(request: null)
-    mirrors(by: null)
+        hidden
+        reaction(request: null)
+        mirrors(by: null)
     hasCollectedByMe
   }
+
   fragment MirrorBaseFields on Mirror {
     id
     profile {
@@ -268,10 +236,11 @@ export const EXPLORE_SONGS = gql`
       }
     }
     appId
-    hidden
-    reaction(request: null)
+        hidden
+        reaction(request: null)
     hasCollectedByMe
   }
+
   fragment MirrorFields on Mirror {
     ...MirrorBaseFields
     mirrorOf {
@@ -283,6 +252,7 @@ export const EXPLORE_SONGS = gql`
      }
     }
   }
+
   fragment CommentBaseFields on Comment {
     id
     profile {
@@ -304,11 +274,12 @@ export const EXPLORE_SONGS = gql`
       }
     }
     appId
-    hidden
-    reaction(request: null)
-    mirrors(by: null)
+        hidden
+        reaction(request: null)
+        mirrors(by: null)
     hasCollectedByMe
   }
+
   fragment CommentFields on Comment {
     ...CommentBaseFields
     mainPost {
@@ -328,6 +299,7 @@ export const EXPLORE_SONGS = gql`
       }
     }
   }
+
   fragment CommentMirrorOfFields on Comment {
     ...CommentBaseFields
     mainPost {
@@ -339,4 +311,4 @@ export const EXPLORE_SONGS = gql`
       }
     }
   }
-`; 
+`

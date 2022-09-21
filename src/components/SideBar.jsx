@@ -10,7 +10,7 @@ import { VscLibrary } from 'react-icons/vsc'
 import {} from 'react-icons/ai'
 import CreatePostStepTwo from './CreatePostStepTwo'
 import CreatePostThree from './CreatePostStepThree'
-import useCreatePost from '../graphql/publication/createPostTypedData'
+import useCreatePost from '../graphql/publication/uploadNewSongTypedData'
 import { HiOutlineDocument } from 'react-icons/hi'
 import CreatePostStepOne from './CreatePostStepOne'
 import CreateFeeBasedPostStep from './CreateFeeBasedPostStep'
@@ -29,7 +29,7 @@ export default function SideBar() {
   const [audioName, setaudioName] = useState("")
   const [postCoverURI, setpostCoverURI] = useState("")
   const [selectedPostModule, setselectedPostModule] = useState("freeCollectModule")
-  const [selectedCurrency, setselectedCurrency] = useState("")
+  const [selectedCurrency, setselectedCurrency] = useState("0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889")
   const [postRefrence, setpostRefrence] = useState(false)
   const [postPrice, setpostPrice] = useState("")
   const [referalFee, setreferalFee] = useState("")
@@ -46,6 +46,7 @@ export default function SideBar() {
   const [postPermission, setpostPermission] = useState(false)
   const [collectLimit, setcollectLimit] = useState("")
   const [postMedia, setpostMedia] = useState([])
+   const [albumArray, setalbumArray] = useState([])
   const [page, setpage] = useState(0)
 
    const {account} = useMoralis()
@@ -66,6 +67,8 @@ export default function SideBar() {
       
     }
   }
+
+    console.log("arry  of  musics ", albumArray)
 
   const handleUploadAudCover = async (postFile) => {
     try{
@@ -226,6 +229,7 @@ const getPostModules = () => {
               isAudioUploading = {isAudioUploading} isAudioUploadingError = {isAudioUploadingError}
               coverUploading ={coverUploading} coverUploadingError = {coverUploadingError}
                setcoverUploadingError = {setcoverUploadingError} setisAudioUploadingError = {setisAudioUploadingError}
+                albumArray = {albumArray}  setalbumArray =  {setalbumArray}
 
             />
           )

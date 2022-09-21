@@ -5,6 +5,8 @@ import App from './App';
 import {MoralisProvider} from 'react-moralis'
 import {ApolloProvider} from '@apollo/client'
 import {apolloClient} from './graphql/Authentication/apoloClient'
+import {BrowserRouter } from 'react-router-dom'
+
 import "./index.css"
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -13,7 +15,11 @@ root.render(
     <ChakraProvider>
       <MoralisProvider appId={process.env.REACT_APP_MORALIS_APP_ID} serverUrl={process.env.REACT_APP_MORALIS_SERVER_URL}>
         <ApolloProvider client={apolloClient}>
+          <BrowserRouter>
+          
          <App />
+         
+         </BrowserRouter>
          </ApolloProvider>
     </MoralisProvider>
     </ChakraProvider>

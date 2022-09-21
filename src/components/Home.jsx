@@ -3,7 +3,7 @@ import { Avatar, AvatarBadge, Box, Button, Circle, CloseButton, Heading, HStack,
 
 } from '@chakra-ui/react'
 import React, {useRef, useState, useEffect} from 'react'
-import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
+import { AiOutlineConsoleSql, AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
 import { FaPause, FaPlay } from 'react-icons/fa'
 import { IoMdNotificationsOutline} from 'react-icons/io'
 import { topSongs } from '../fakeData'
@@ -13,16 +13,21 @@ import {useState as usestate } from '@hookstate/core'
 import useControls from '../hooks/useControls'
 import { useMoralis } from 'react-moralis'
 import useSignIn from '../graphql/Authentication/useSignIn'
-
+import { trendingSongs } from '../fakeDataTwo'
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import AudioPlayer from './AudioPlayer'
 import { topBanner } from '../topBanner'
 import { BiBrightness } from 'react-icons/bi'
+import { ArtistImg, CardContainer, CardControls } from '../StyledComponent'
+import { Link } from 'react-router-dom'
 
 export default function Home({songs, isLoading, isError}) {
     const [slideRef, setSlideRef] = useState(null)
     const [slideRefTwo, setSlideRefTwo] = useState(null)
+    const [slideRefThree, setSlideRefThree] = useState(null)
+    const [slideRefFour, setSlideRefFour] = useState(null)
+    const [slideRefFive, setSlideRefFive] = useState(null)
     const [isAuthModal, setisAuthModal] = useState(false)
      const [isLensSignedIn, setisLensSignedIn] = useState(false)
      const [test, settest] = useState(true)
@@ -33,10 +38,13 @@ export default function Home({songs, isLoading, isError}) {
      const [hoveredCard, sethoveredCard] = useState()
     const {authenticate, account, logout, isAuthenticated, isAuthenticating, authError}  = useMoralis()
 
-
-    useEffect(() => {
+     const myAudRef  = useRef([])
+     const trendingMusicRef  =  useRef([])
+      //const  {currentSongState} =  usestate(store)
+       const  {progress} =  globalState.currentSongState.get()
+    /*useEffect(() => {
       myAudRef.current = myAudRef.current.slice(0, topSongs.length)
-    }, [])
+    }, [])*/
     const settings = {
         dots: false,
         infinite: true,
@@ -48,6 +56,10 @@ export default function Home({songs, isLoading, isError}) {
        // autoplay : true
         
       };
+
+        //console.log("current Audio", myAudRef.current[0])
+
+          const {playIt, pauseIt} = useControls()
 
       const bannerSettings  = {
         dots: false,
@@ -62,62 +74,63 @@ export default function Home({songs, isLoading, isError}) {
       autoplaySpeed: 4000,
       className: "slider-container"
       }
-      
-      const myAudRef = useRef([])
 
-       const onPlaying  = (index) => {
-        const  duration = myAudRef.current[index].duration
-         const ct = myAudRef.current[index].currentTime
-         console.log(duration, ct)
-          // setCurrentPlayingSong({...currentPlayingSong, "progress" : ct / duration * 100, "length" : duration})
-            globalState.currentSongState.set({...globalState.currentSongState?.get(), "progress" : ct / duration * 100, "length" : duration})
-      } 
+        const  handlePlay  =  (ref, index, song, trackStats, trackModule, trackId, trackCreatorProfile, theFullsong)  =>  {
+          if(globalState.audioRef.get() !== '') {
+            globalState.audioRef.get()?.pause()
+           // globalState.audioRef.get().currentTime = 0
+          }
+           console.log("theee  myy song", theFullsong)
+          globalState.currentPlayingSongStats.set(trackStats)
+          globalState.currentPlayingModule.set(trackModule)
+          globalState.currentPlayingSongId.set(trackId)
+          globalState.currentPlayingSongCreatorProfile.set(trackCreatorProfile)
+          playIt(ref, index, song)
+        }
+     console.log("the  post  state", globalState.currentSongState.get())
+        const onPlaying  = (index) => {
+         const  duration = myAudRef.current[index].duration
+           const ct = myAudRef.current[index].currentTime
+           console.log("duration time", duration, ct)
+            // setCurrentPlayingSong({...currentPlayingSong, "progress" : ct / duration * 100, "length" : duration})
+              globalState.currentSongState.set({...globalState.currentSongState?.get(), "progress" : ct / duration * 100, "length" : duration})
+        
+        } 
 
-     
-      const myAudioRef = useRef()
-      const clickRef = useRef()
-     // const {signIn} = useSignIn()
-     const playChoosenAud = (aud, index, song) => {
-      
-     
-      if(globalState.audioRef.get() !== '') {
-        globalState.audioRef.get()?.pause()
-        globalState.audioRef.get().currentTime = 0
-      }
-      playIt(aud, index,song)
-     }
-     
-      const {playIt, pauseIt} = useControls()
-     
-      const checkWidth  = (e) => {
-        let width = clickRef.current.clientWidth
-          const offset = e.nativeEvent.offsetX
-    
-          const divProgress = offset / width * 100;
-          globalState.audioRef.get().currentTime = divProgress / 100 *  globalState.currentSongState.get().length
-          console.log("you clicked me")
-         }
-
-         const openAuthModal = () => {
-            setisAuthModal(true)
-         }
-
-         const closeAuthModal = () => {
-              setisAuthModal(false)
+        // on playing  trending  audios
+         
+        const onPlayingTrening  = (index) => {
+          const  duration = trendingMusicRef.current[index].duration
+            const ct = trendingMusicRef.current[index].currentTime
+            console.log("duration time", duration, ct)
+             // setCurrentPlayingSong({...currentPlayingSong, "progress" : ct / duration * 100, "length" : duration})
+               globalState.currentSongState.set({...globalState.currentSongState?.get(), "progress" : ct / duration * 100, "length" : duration})
+         
          } 
 
-         const  handleMouseEnterCard = (index) => {
-          sethoveredCard(index)
-            setisShowPlayBtn(true)
-         }
+        
 
-         console.log("this is hovered  card", hoveredCard)
+        // on  audio  end 
+       const onPlayEnd = (index) =>  {
+          console.log("this  song  is  ensed ", index)
+          globalState.isPlaying.set(false)
+           progress.set(0)
+        
+       }
 
-         const  handleMouseLeaveCard = () => {
-          
-           setisShowPlayBtn(false)
-         }
-         
+       console.log("this is  progress", progress)
+
+       const onAudioLoading =  (index)  =>  {
+           console.log("this  audio  is  loading", index)
+       }
+
+       const onCanPlayAudio  =  (index) =>  {
+          globalState.isAudioReadyToPlay.set(true)
+          console.log("this  audio  is  ready  to  play",  index)
+       }
+
+         console.log("the  audio  ref",globalState.audioRef.get())
+      
          return (
     <Box >
        
@@ -144,9 +157,9 @@ export default function Home({songs, isLoading, isError}) {
            </Slider>
         </Box>
        
-        <Box  py={4}  >
-           <Box w="95%" mx="auto" display="flex" justifyContent="space-between"  p={2} alignItems="center">
-              <Heading fontSize="3xl" >Ngoma za moto</Heading>
+        <Box  py={2}  >
+           <Box w="95%" mx="auto" display="flex" justifyContent="space-between"  py={2} alignItems="center">
+              <Heading fontSize="3xl" >New & Trending</Heading>
                <Box display="flex" alignItems="center" w={100} justifyContent="space-between">
                 <AiOutlineLeft  size={30} cursor="pointer" onClick={slideRefTwo?.slickPrev}/>
                 <AiOutlineRight size={30} cursor="pointer" onClick={slideRefTwo?.slickNext}/>
@@ -157,32 +170,152 @@ export default function Home({songs, isLoading, isError}) {
 
             return(
               <Box  >
-                <Box bgColor="blackAlpha.100" mx={3} w={196} h={196} p={1} position="relative" borderRadius={8} onMouseEnter = {() =>  handleMouseEnterCard(i)} onMouseLeave = {() => setisShowPlayBtn(false)}>
-                  <img   src={data.metadata.image} maxW="100%" borderTopRadius={8} borderBottomRadius={4}  className="my-image"/>
-                   {isShowPlayBtn && i === hoveredCard &&
-                   <ScaleFade initialScale={0.1} in={isShowPlayBtn}>
-                  <Box position="absolute" top={0} w={196} h={196} bgColor="blackAlpha.600" display="flex" alignItems="center" justifyContent="center" >
+                <CardContainer>
+                 <img   src={data.metadata.image} maxW="100%" borderTopRadius={8} borderBottomRadius={4}  className="my-image"/> 
+                     {data.metadata.media.map((media, index) => {
+
+                      return(
+                        <audio  src={media.original.url}    ref={el =>  trendingMusicRef.current[i] = el}  onTimeUpdate = {() => onPlayingTrening(i)} onEnded = {() => onPlayEnd(i)}  onCanPlay = {() => onCanPlayAudio(i) }   />
+                      )
+                     })}               
+                    <CardControls>
+                      {
+                   globalState.isPlaying.get()  && globalState.currentIndexSong.get() === i  ?
+                    <Circle size={65} bgColor="blackAlpha.800" cursor="pointer">
+                   <FaPause    size={35} onClick= {() => pauseIt()} />
+                </Circle> :
                    <Circle size={67} bgColor="blackAlpha.400" cursor="pointer" >
-                   <FaPlay  size={30}/>
+                   <FaPlay  size={30} onClick={() => handlePlay(trendingMusicRef, i, data.metadata, data.stats, data.collectModule, data.id, data.profile, data)}/>
                    </Circle>
-                </Box>
-                </ScaleFade> 
-                   }
-                    
-                    <Box boxShadow="dark-lg">
-                      <Text textAlign="center" textTransform="capitalize" fontSize="lg" color="whiteAlpha.600" cursor="pointer">{data.metadata.name}</Text>
-                       <Text textAlign="center" color="whiteAlpha.800" cursor="pointer"> {data.profile.name || data.profile.handle} </Text>
+                       }
+                   </CardControls>
+                
+                  <Box boxShadow="dark-lg">
+                  <Link to={`music/${data.id}`}> <Text textAlign="center" textTransform="capitalize" fontSize="lg" color="whiteAlpha.600" cursor="pointer">{data.metadata.name}</Text></Link>
+                   <Link to={`artist/${data.profile.id}`}>  <Text textAlign="center" color="whiteAlpha.800" cursor="pointer"> {data.profile.name || data.profile.handle} </Text></Link>  
                     </Box>
-                  </Box>
-                   
+                  
+                  </CardContainer>  
+
                  </Box>
             )
           })}
           </Slider>
         </Box>
        
-  
-          
+      <Box py={2}>
+      <Box w="95%" mx="auto" display="flex" justifyContent="space-between"  py={2} alignItems="center">
+              <Heading fontSize="3xl" >PlayLists</Heading>
+               <Box display="flex" alignItems="center" w={100} justifyContent="space-between">
+                <AiOutlineLeft  size={30} cursor="pointer" onClick={slideRefThree?.slickPrev}/>
+                <AiOutlineRight size={30} cursor="pointer" onClick={slideRefThree?.slickNext}/>
+               </Box>
+   </Box>
+      <Box  w="100%" >
+        <Slider ref={setSlideRefThree} {...settings}>
+         {topSongs.map((data, i) => {
+
+          return(
+             <CardContainer>
+            <img     src={data.cover}   className="my-image"/>
+            <audio  src={data.song}     ref={el =>  myAudRef.current[i] = el}  onTimeUpdate = {() => onPlaying(i)} onEnded = {() => onPlayEnd(i)}  onCanPlay = {() => onCanPlayAudio(i) } />
+              <CardControls>
+                {globalState.isPlaying.get()  && globalState.currentIndexSong.get() === i  ?
+                
+                <Circle size={65} bgColor="blackAlpha.800" cursor="pointer">
+                <FaPause    size={35} onClick= {() => pauseIt()} />
+                </Circle> :
+                  <Circle size={65} bgColor="blackAlpha.800" cursor="pointer">
+                  <FaPlay    size={35} onClick= {() => handlePlay(myAudRef, i, data) } />
+                   </Circle>
+              
+              }
+              </CardControls>
+               <Box>
+                <Text textAlign="center" color="whiteAlpha.700">The  song  name</Text>
+                <Text textAlign="center" color="whiteAlpha.800">The  artist  name </Text>
+               </Box>
+            </CardContainer>
+          )
+         })}
+        </Slider>
+      </Box>
+           
+
+        
+      </Box>
+
+        <Box >
+        <Box w="95%" mx="auto" display="flex" justifyContent="space-between"  py={2} alignItems="center">
+              <Heading fontSize="3xl" >Podcasts</Heading>
+               <Box display="flex" alignItems="center" w={100} justifyContent="space-between">
+                <AiOutlineLeft  size={30} cursor="pointer" onClick={slideRefFour?.slickPrev}/>
+                <AiOutlineRight size={30} cursor="pointer" onClick={slideRefFour?.slickNext}/>
+               </Box>
+           </Box>
+          <Box>
+            <Slider ref={setSlideRefFour} {...settings}>
+              {trendingSongs.map((data, i) => {
+
+                return(
+                  <CardContainer>
+                    <img   src={data.image} className="my-image"     />
+                     <CardControls>
+                      <Circle size={55} bgColor="blackAlpha.600" cursor="pointer">
+                        <FaPlay    size={35}  />
+                      </Circle>
+                     </CardControls>
+                     <Box>
+                      <Text textAlign="center">Podcast name</Text>
+                      <Text textAlign="center">Podcast creator  name</Text>
+                     </Box>
+                  </CardContainer>
+                )
+              })}
+            </Slider>
+          </Box>
+      </Box>  
+
+      <Box py={2}>
+      <Box w="95%" mx="auto" display="flex" justifyContent="space-between"  py={2} alignItems="center">
+              <Heading fontSize="3xl" >Weekly Charts</Heading>
+               <Box display="flex" alignItems="center" w={100} justifyContent="space-between">
+                <AiOutlineLeft  size={30} cursor="pointer" onClick={slideRefFive?.slickPrev}/>
+                <AiOutlineRight size={30} cursor="pointer" onClick={slideRefFive?.slickNext}/>
+               </Box>
+           </Box>
+           <Slider ref={setSlideRefFive} {...settings}>
+              {trendingSongs.map((data, i) => {
+
+                return(
+                  <CardContainer>
+                    <img   src={data.image} className="my-image"     />
+                     <CardControls>
+                      <Circle size={55} bgColor="blackAlpha.600" cursor="pointer">
+                        <FaPlay    size={35}  />
+                      </Circle>
+                     </CardControls>
+                     <Box>
+                      <Text textAlign="center">Podcast name</Text>
+                      <Text textAlign="center">Podcast creator  name</Text>
+                     </Box>
+                  </CardContainer>
+                )
+              })}
+            </Slider>
+      </Box>
+    
+      <Box py={2}>
+       <HStack spacing={4}>
+       <Heading fontSize="3xl" >Featured Artists</Heading> <AiOutlineRight size={25} cursor="pointer" />
+       </HStack>
+
+        <Box>
+          <Circle size={250} bgColor="cyan.700">
+            <ArtistImg     src='img/abdul.jpg'    />
+          </Circle>
+        </Box>
+      </Box>
       
     </Box>
   )

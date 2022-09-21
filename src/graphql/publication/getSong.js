@@ -1,17 +1,9 @@
-import {gql} from '@apollo/client'
- //["pax423"]
-export const EXPLORE_SONGS = gql`
-  query{
-  explorePublications(request: {
-    sortCriteria: TOP_COMMENTED,
-    publicationTypes: [POST, MIRROR],
-    
-    sources :  ["audios"]       
-    
-    
-  }) {
-    
-      items {
+import {gql} from "@apollo/client"
+import {apolloClient} from '../Authentication/apoloClient'
+
+ export  const GET_MUSIC = gql`
+  query($request: PublicationQueryRequest!) {
+    publication(request: $request) {
         __typename 
         ... on Post {
           ...PostFields
@@ -21,23 +13,12 @@ export const EXPLORE_SONGS = gql`
         }
         ... on Mirror {
           ...MirrorFields
-        }
-      }
-      pageInfo {
-        prev
-        next
-        totalCount
       }
     }
   }
   fragment MediaFields on Media {
     url
-    width
-    height
     mimeType
-    altTag
-    cover
-    
   }
   fragment ProfileFields on Profile {
     id
@@ -66,12 +47,6 @@ export const EXPLORE_SONGS = gql`
         original {
           ...MediaFields
         }
-        small {
-          ...MediaFields
-        }
-        medium {
-          ...MediaFields
-        }
       }
     }
     coverPicture {
@@ -83,12 +58,6 @@ export const EXPLORE_SONGS = gql`
       }
       ... on MediaSet {
         original {
-          ...MediaFields
-        }
-        small {
-         ...MediaFields
-        }
-        medium {
           ...MediaFields
         }
       }
@@ -132,6 +101,7 @@ export const EXPLORE_SONGS = gql`
     totalAmountOfMirrors
     totalAmountOfCollects
     totalAmountOfComments
+    totalUpvotes
   }
   fragment MetadataOutputFields on MetadataOutput {
     name
@@ -142,13 +112,6 @@ export const EXPLORE_SONGS = gql`
       original {
         ...MediaFields
       }
-      small {
-        ...MediaFields
-      }
-      medium {
-        ...MediaFields
-      }
-      
     }
     attributes {
       displayType
@@ -232,6 +195,8 @@ export const EXPLORE_SONGS = gql`
     metadata {
       ...MetadataOutputFields
     }
+
+    
     createdAt
     collectModule {
       ...CollectModuleFields
@@ -241,6 +206,7 @@ export const EXPLORE_SONGS = gql`
         type
       }
     }
+    
     appId
     hidden
     reaction(request: null)
@@ -339,4 +305,25 @@ export const EXPLORE_SONGS = gql`
       }
     }
   }
-`; 
+`;
+
+const getPublicationRequest = (publicationId) => {
+  return apolloClient.query({
+    query: gql(GET_MUSIC),
+    variables: {
+      request: {
+        publicationId,
+      },
+    },
+  });
+};
+
+export const getSongData = async (trackId) => {
+  try {
+  const result = await getPublicationRequest(trackId);
+  return result.data;
+  } catch(error) {
+    alert(error)
+  }
+};
+     

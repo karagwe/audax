@@ -7,6 +7,13 @@ const store = createState({
     currentPlayingSong : {},
     currentIndexSong : 0,
     currentSongState : {},
+    isAudioLoading :  false,
+    isAudioReadyToPlay: false,
+    currentPlayingModule : {},
+    currentPlayingSongId : "",
+    currentPlayingSongCreatorProfile : {},
+    currentPlayingSongStats : {}
+    
 })
 
 export default store

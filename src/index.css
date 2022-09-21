@@ -1,4 +1,5 @@
 .my-image {
-   filter: brightness(0.6);
+   filter: brightness(0.5);
    border-radius: 8px;
+   max-width: 194px;
 }

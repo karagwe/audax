@@ -11,7 +11,8 @@ export default function CreatePostStepOne({postDescription,
      handleUploadAudToIpfs,
      isAudioUploading, isAudioUploadingError,
      coverUploading, coverUploadingError, handleConsole,  albumCover, selectedSongs,
-     setselectedSongs,  setcoverUploadingError,  setisAudioUploadingError
+     setselectedSongs,  setcoverUploadingError,  setisAudioUploadingError,
+     albumArray, setalbumArray
   
   }) {
   const [selectedAudion, setselectedAudio] = useState([])
@@ -24,6 +25,8 @@ export default function CreatePostStepOne({postDescription,
 
      const addAnothorAud = () => {
        //setselectedSongs(!selectedSongs)
+        setalbumArray()
+
      }
      const selectePhoto = () => {
       slectPhotoRef.current.click()
@@ -39,7 +42,9 @@ export default function CreatePostStepOne({postDescription,
     }, [albumCover, selectedSongs])
     
      const uploadNewAudio = async (audio) => {
+      
         await handleUploadAudToIpfs(audio)
+        // setalbumArray([{...albumArray, "item" : selectedSongs, "type" : "audio/mpeg", " altTag" : trackName, "cover": albumCover}])
          setaddNew(true)
      }
      const getUploadAudio = () => {
@@ -65,13 +70,13 @@ export default function CreatePostStepOne({postDescription,
                <Button onClick={() => setisAudioUploadingError(false)} color="blackAlpha.800" mt={4}>Try again </Button>
             </Box>
           )
-        } else if(selectedSongs?.length > 0 && addNew){
+        } else if(selectedSongs.length > 0 && addNew){
           return(
             <Box w="100%" h={150} border="1px" borderColor="gray.400" borderRadius={8}  display="flex" flexDirection="column" alignItems="center" justifyContent="center">
             <Circle size={63} bgColor="skyblue">
                <BsCheck2Circle  size={45} color="black"/>
             </Circle>
-            <Button leftIcon={<AiOutlinePlus />} color="blackAlpha.900" w={180} mt={4} onClick= {addAnothorAud}>Add more</Button>
+            <Button leftIcon={<AiOutlinePlus />} color="blackAlpha.900" w={180} mt={4} onClick= {() => setaddNew(false)}>Add more</Button>
           </Box>
 
           )
@@ -79,7 +84,7 @@ export default function CreatePostStepOne({postDescription,
           return(
             <Box w="100%" h={150} border="1px" borderColor="gray.400" borderRadius={8}  display="flex" flexDirection="column" alignItems="center" justifyContent="center">
            <input type="file" ref={selectAudRef}  onChange={e => setselectedAudio(e.target.files[0])} multiple ={false} hidden accept=".mp3"/>
-         <Text>{selectedAudion.name}</Text>  
+         <Text>{selectedAudion?.name}</Text>  
         <Button onClick={ selectAudio }  variant="outline">Select File</Button>
         <Button leftIcon={<AiOutlineCloudUpload />} onClick={() => uploadNewAudio(selectedAudion)}   mt={6} w={170} color="blackAlpha.900">Upload file</Button>
           </Box>
@@ -120,7 +125,7 @@ export default function CreatePostStepOne({postDescription,
         return(
           <Box w="100%" h={150} border="1px" borderColor="gray.400" borderRadius={8}  display="flex" flexDirection="column" alignItems="center" justifyContent="center">
            <input type="file" ref={slectPhotoRef}  onChange={e => setselctedPhoto(e.target.files[0])} multiple ={false} hidden accept="image/jpeg"/>
-          <Text>{selctedPhoto.name}</Text>
+          <Text>{selctedPhoto?.name}</Text>
          <Button onClick={ selectePhoto}  variant="outline">Select File</Button>
          <Button onClick={() =>  handleUploadAudCover(selctedPhoto)} color="blackAlpha.900" mt={6} w={170} leftIcon={<AiOutlineCloudUpload />} >Upload file</Button>
         </Box>

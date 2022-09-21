@@ -2,7 +2,7 @@ import { Box, Heading, HStack, Input, Text, Textarea } from '@chakra-ui/react'
 import React, {useState} from 'react'
 import { AiOutlineClose, AiOutlineComment, AiOutlineGlobal, AiOutlineQuestionCircle, AiOutlineRetweet, AiOutlineTag } from 'react-icons/ai'
 import { HiOutlineUsers } from 'react-icons/hi'
-import useCreatePost from '../graphql/publication/createPostTypedData'
+import useCreatePost from '../graphql/publication/uploadNewSongTypedData'
 import { useMoralis } from 'react-moralis'
 
 import {} from 'react-icons/ai'

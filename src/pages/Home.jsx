@@ -5,24 +5,38 @@ import Navbar from '../components/Navbar'
 import SideBar from '../components/SideBar'
 import {GET_USER_PROFILES} from '../graphql/profile/getUserProfile'
 import { useQuery } from '@apollo/client'
-import {GET_USER_PUBLICATIONS} from '../graphql/publication/getUserPublication'
+import {GET_USER_PUBLICATIONS} from '../graphql/publication/getUserSongs'
 import {EXPLORE_SONGS} from '../graphql/publication/getSongs'
+import  {GET_PROFILE_ID} from '../graphql/profile/getProfileId'
 import AudioPlayer from '../components/AudioPlayer'
+import { useMoralis } from 'react-moralis'
+import { useState, useEffect } from 'react'
+
 
 export default function Home() {
-  const userId = "0x41cd"
-  const {data: userProfile, loading : isUserProfileLoading, error: isUserProfileError} = useQuery(GET_USER_PROFILES, {
+  const [userAccIds, setuserAccIds] = useState([])
+  const {account} = useMoralis()
+  //const userId = "0x41cd"
+  const {data: userProfileId, loading : isUserProfileIdLoading, error: isUserProfileIdError} = useQuery(GET_PROFILE_ID, {
     variables : {
       request : {
-        profileId : userId
+        ownedBy : account,
+         limit: 1
       }
     }
   })
 
-   const {data: songs, loading : isSongsLoading, error : isSongsError} = useQuery(EXPLORE_SONGS)
+   
   
-   console.log("user publication", songs)
+
+   const {data: songs, loading : isSongsLoading, error : isSongsError} = useQuery(EXPLORE_SONGS)
+    useEffect(() => {
+      setuserAccIds(userProfileId?.profiles.items[0])
+    }, [userProfileId])
+    
+   console.log("user account  ids", userAccIds?.id)
   // console.log("the user profile", userProfile)
+   
   return (
     <Box  h="100vh" w="100vw">
         <Navbar  />
@@ -51,7 +65,7 @@ export default function Home() {
 
         </Box>
         <Box w="100%" h={80}  position="fixed" top="85vh" >
-          <AudioPlayer  />
+          <AudioPlayer  profileId = {userAccIds?.id}/>
           </Box>
           
     </Box>
